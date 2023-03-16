@@ -39,7 +39,7 @@ const Home = ({navigation}) => {
         <View style={styles.titleBanner}>
           <BannerImage
             imgSource={ImagesPath.LoginImagePath}
-            title={'Image Picker'}
+            title={'Upload image'}
           />
         </View>
         <View style={styles.imageContainer}>
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     padding: '4%',
   },
   AddImgButton: {
-    flex: 0.2,
+    flex: 0.15,
     padding: '4%',
   },
 });

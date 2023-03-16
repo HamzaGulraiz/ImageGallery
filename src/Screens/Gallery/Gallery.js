@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
     flex: 0.2,
   },
   gallerFlatList: {
-    flex: 0.8,
+    flex: 0.75,
   },
 });

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
+import axios from 'axios';
 
 import ImagesPath from '../../Utils/ImagesPath/ImagesPath';
 
@@ -37,6 +38,7 @@ const Register = ({navigation}) => {
   const registerValidation = () => {
     setIsLoaded(false);
     console.log(userInfoValid);
+    console.log(firstName, lastName, email, password);
     if (
       userInfoValid.firstNameValid === false ||
       userInfoValid.lastNameValid === false ||
@@ -47,7 +49,7 @@ const Register = ({navigation}) => {
       setTimeout(() => {
         setInformationError('');
         setIsLoaded(true);
-      }, 3000);
+      }, 2000);
     } else {
       navigation.navigate('Login');
       setIsLoaded(true);

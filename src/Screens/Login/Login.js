@@ -167,7 +167,8 @@ const Login = ({navigation}) => {
             title={'Login'}
             miniTitle={'Sign up'}
             onClick={() => {
-              loginValidation();
+              navigation.navigate('DrawerNavigation');
+              //loginValidation();
             }}
             newOldUser={'Not a member '}
             newOldUserClick={() => navigation.navigate('Register')}
