@@ -1,9 +1,11 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import 'react-native-gesture-handler';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useIsFocused} from '@react-navigation/native';
+import {store} from './src/redux/Store';
+import {Provider} from 'react-redux';
 import CustomDrawer from './src/Components/CustomDrawerComponent/CustomDrawer';
 import Icon from 'react-native-vector-icons/Octicons';
 import Login from './src/Screens/Login/Login';
@@ -12,28 +14,52 @@ import Home from './src/Screens/Home/Home';
 import Gallery from './src/Screens/Gallery/Gallery';
 import Colors from './src/Utils/Colors/Colors';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Stack = createNativeStackNavigator();
 
 function MyStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      />
+  const isFocused = useIsFocused();
+  /////Check for user token
+  const [routeName, setRouteName] = useState('');
+  useEffect(() => {
+    if (isFocused) {
+      getTokenItem();
+    }
+  }, [isFocused]);
+
+  const getTokenItem = async () => {
+    let tokenVal = '';
+    await AsyncStorage.getItem('userToken').then(value => {
+      tokenVal = value;
+      if (!value) {
+        setRouteName('Login');
+      } else {
+        setRouteName('DrawerNavigation');
+      }
+    });
+  };
+
+  return routeName != '' ? (
+    <Stack.Navigator initialRouteName={routeName}>
       <Stack.Screen
         name="Register"
         component={Register}
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
         name="DrawerNavigation"
         component={DrawerNavigation}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
-  );
+  ) : null;
 }
 
 const Drawer = createDrawerNavigator();
@@ -75,7 +101,9 @@ function DrawerNavigation() {
 const App = () => {
   return (
     <NavigationContainer>
-      <MyStack />
+      <Provider store={store}>
+        <MyStack />
+      </Provider>
     </NavigationContainer>
   );
 };

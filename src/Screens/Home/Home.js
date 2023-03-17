@@ -6,9 +6,14 @@ import AddPictureButton from '../../Components/Button/AddPictureButton';
 import BannerImage from '../../Components/BannerImage/BannerImage';
 import ImageContainer from '../../Components/ImageContainer/ImageContainer';
 import ImagesPath from '../../Utils/ImagesPath/ImagesPath';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {useSelector, useDispatch} from 'react-redux';
 
 const Home = ({navigation}) => {
   const defaultImage = ImagesPath.ImagePickerDefaultPicture;
+
+  const USER_TOKEN = useSelector(store => store);
 
   const [uploadImage, setUploadImage] = useState('');
   const choseImage = () => {
@@ -28,7 +33,12 @@ const Home = ({navigation}) => {
     });
   };
 
-  const uploadPicture = () => {};
+  const getTokenItem = () => {
+    AsyncStorage.getItem('userToken').then(value => {
+      console.log('async storge', value);
+      console.log('redux storge', USER_TOKEN);
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -67,7 +77,7 @@ const Home = ({navigation}) => {
         <View style={styles.AddImgButton}>
           <AddPictureButton
             onButtonCLick={() => {
-              console.log('added to gallery');
+              getTokenItem();
             }}
             title={'Add to Gallery'}
           />

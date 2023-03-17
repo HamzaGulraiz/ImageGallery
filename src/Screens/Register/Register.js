@@ -7,8 +7,11 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-root-toast';
 
 import ImagesPath from '../../Utils/ImagesPath/ImagesPath';
+import Config from '../../Config';
 
 import InputField from '../../Components/TextInputFields/InputField';
 
@@ -17,7 +20,12 @@ import TouchableButton from '../../Components/Button/TouchableButton';
 
 import ErrorMsg from '../../Utils/Strings/ErrorString/ErrorMsg';
 
+import {useDispatch} from 'react-redux';
+import {userTokenRedux} from '../../redux/Action';
+
 const Register = ({navigation}) => {
+  /////// redux dispatch
+  const dispatch = useDispatch();
   ////// activity indicator
   const [isLoaded, setIsLoaded] = useState(true);
   ///// User information
@@ -25,6 +33,8 @@ const Register = ({navigation}) => {
   const [lastName, SetLastName] = useState('');
   const [email, SetEmail] = useState('');
   const [password, SetPassword] = useState('');
+
+  const [errorMessage, setErrorMessage] = useState('');
 
   //User Information After Validation
   const [userInfoValid, setUserInfoValid] = useState({
@@ -36,9 +46,8 @@ const Register = ({navigation}) => {
 
   const [informationError, setInformationError] = useState('');
   const registerValidation = () => {
-    setIsLoaded(false);
-    console.log(userInfoValid);
-    console.log(firstName, lastName, email, password);
+    //console.log(userInfoValid);
+    //console.log(firstName, lastName, email, password);
     if (
       userInfoValid.firstNameValid === false ||
       userInfoValid.lastNameValid === false ||
@@ -48,12 +57,68 @@ const Register = ({navigation}) => {
       setInformationError(ErrorMsg.allFieldRequired);
       setTimeout(() => {
         setInformationError('');
-        setIsLoaded(true);
       }, 2000);
     } else {
-      navigation.navigate('Login');
-      setIsLoaded(true);
+      // navigation.navigate('Login');
+      // setIsLoaded(true);
+      registerUser();
     }
+  };
+
+  const registerUser = () => {
+    setIsLoaded(false);
+
+    let data = JSON.stringify({
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      password: password,
+    });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${Config.base_Url}register`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then(response => {
+        //setErrorMessage(response.data.message);
+        //console.log('axios then', JSON.stringify(response.data.message));
+
+        ////Storing token in async/////
+        const tokenValue = response.data.data.token;
+        console.log('token sent by async register', tokenValue);
+        AsyncStorage.setItem('userToken', tokenValue);
+
+        ////Redux storage
+        dispatch(
+          userTokenRedux({
+            token: tokenValue,
+          }),
+        );
+
+        setIsLoaded(true);
+        navigation.navigate('DrawerNavigation');
+      })
+      .catch(error => {
+        console.log('Register Catch', error.response);
+        setIsLoaded(true);
+        setErrorMessage(error.response.data.message);
+        Toast.show(errorMessage, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
+      });
   };
 
   /**Set Errors on state  */
@@ -65,7 +130,7 @@ const Register = ({navigation}) => {
         ...userInfoValid,
         firstNameValid: false,
       });
-    } else if (!value.trimEnd() || value.length <= 3 || value.length > 10) {
+    } else if (!value.trimEnd() || value.length < 3 || value.length > 10) {
       SetFirstNameError(ErrorMsg.minimum3char);
       setUserInfoValid({
         ...userInfoValid,
@@ -90,7 +155,7 @@ const Register = ({navigation}) => {
         ...userInfoValid,
         lastNameValid: false,
       });
-    } else if (!value.trimEnd() || value.length <= 3 || value.length > 10) {
+    } else if (!value.trimEnd() || value.length < 3 || value.length > 10) {
       setLastNameError(ErrorMsg.minimum3char);
       setUserInfoValid({
         ...userInfoValid,

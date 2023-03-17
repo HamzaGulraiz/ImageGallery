@@ -13,10 +13,29 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-root-toast';
 import {useNavigation} from '@react-navigation/native';
 
 const CustomDrawer = ({...props}) => {
   const navigation = useNavigation();
+
+  const logoutButton = async () => {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      navigation.navigate('Login');
+    } catch (exception) {
+      Toast.show('There was some error, Try again..', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
+    }
+  };
+
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView
@@ -51,7 +70,7 @@ const CustomDrawer = ({...props}) => {
               {
                 text: 'OK',
                 onPress: () => {
-                  navigation.navigate('Login');
+                  logoutButton();
                 },
               },
             ]);
