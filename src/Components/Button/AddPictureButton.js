@@ -1,12 +1,22 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React from 'react';
 import Colors from '../../Utils/Colors/Colors';
 
-const AddPictureButton = ({title, onButtonCLick}) => {
+const AddPictureButton = ({title, onButtonCLick, isLoaded}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onButtonCLick} style={styles.selectButton}>
-        <Text style={styles.btnText}>{title}</Text>
+        {isLoaded ? (
+          <Text style={styles.btnText}>{title}</Text>
+        ) : (
+          <ActivityIndicator size="small" color="black" />
+        )}
       </TouchableOpacity>
     </View>
   );

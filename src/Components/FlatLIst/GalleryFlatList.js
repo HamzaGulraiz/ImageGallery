@@ -6,18 +6,66 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import Config from '../../Config';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-root-toast';
+import {useIsFocused} from '@react-navigation/native';
 
 const GalleryFlatList = () => {
+  const [tokenValue, setTokenValue] = useState();
+  const [data, setData] = useState();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      apiData();
+    }
+  }, [isFocused]);
+
+  const apiData = () => {
+    if (data != null) {
+      ////////////Get token data
+      AsyncStorage.getItem('userToken').then(value => {
+        setTokenValue(value);
+        //console.log('async storge', value);
+      });
+
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `${Config.base_Url}getUserImages`,
+        headers: {
+          Authorization: `Bearer ${tokenValue}`,
+        },
+      };
+
+      axios
+        .request(config)
+        .then(response => {
+          //  console.log('api images ', JSON.stringify(response.data.data));
+          setData(response.data.data);
+          // console.log('Data state', data);
+        })
+        .catch(error => {
+          console.log('flatlist api catch error', error);
+        });
+    } else {
+      console.log('already have values');
+    }
+  };
+
   const renderItem = ({item}) => {
-    return <Image source={item.uri} style={styles.image} />;
+    // console.log(item.imageURL);
+    return <Image source={{uri: item.imageURL}} style={styles.image} />;
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={ITEMS}
-        keyExtractor={item => item.id}
+        data={data}
+        keyExtractor={item => item._id}
         numColumns={2}
         renderItem={renderItem}
       />
