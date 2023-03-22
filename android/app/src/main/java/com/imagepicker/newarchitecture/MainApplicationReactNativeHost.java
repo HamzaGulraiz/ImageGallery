@@ -1,4 +1,4 @@
-package com.imagepicker.newarchitecture;
+package com.ImageGallery.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.imagepicker.BuildConfig;
-import com.imagepicker.newarchitecture.components.MainComponentsRegistry;
-import com.imagepicker.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.ImageGallery.BuildConfig;
+import com.ImageGallery.newarchitecture.components.MainComponentsRegistry;
+import com.ImageGallery.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

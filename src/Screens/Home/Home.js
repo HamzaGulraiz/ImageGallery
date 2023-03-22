@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {launchImageLibrary} from 'react-native-image-picker';
 import DrawerButton from '../../Components/Button/DrawerButton';
 import AddPictureButton from '../../Components/Button/AddPictureButton';
@@ -14,7 +14,7 @@ import Config from '../../Config';
 import {useSelector, useDispatch} from 'react-redux';
 
 const Home = ({navigation}) => {
-  const defaultImage = ImagesPath.ImagePickerDefaultPicture;
+  const defaultImage = ImagesPath.ImageGalleryDefaultPicture;
 
   ////// activity indicator
   const [isLoaded, setIsLoaded] = useState(true);
@@ -24,6 +24,7 @@ const Home = ({navigation}) => {
   const [uploadImage, setUploadImage] = useState('');
   const [imageData, setImageData] = useState();
   const [tokenValue, setTokenValue] = useState();
+
   const choseImage = () => {
     const options = {
       noData: true,
@@ -32,6 +33,7 @@ const Home = ({navigation}) => {
     launchImageLibrary(options, response => {
       if (response.didCancel === true) {
         console.log('user cancelled');
+        setUploadImage('');
       } else {
         let source = {uri: response.assets[0].uri};
         setUploadImage(source);
@@ -41,15 +43,23 @@ const Home = ({navigation}) => {
     });
   };
 
+  useEffect(() => {
+    AsyncStorage.getItem('userToken').then(value => {
+      // console.log('async storge', value);
+      setTokenValue(prev => {
+        return value;
+      });
+    });
+
+    console.log('user token ', tokenValue);
+  });
+
   const AddImageToDataBase = () => {
     setIsLoaded(false);
     if (uploadImage != '') {
+      //getAsyncData();
       ////////////Get token data
-      AsyncStorage.getItem('userToken').then(value => {
-        // console.log('async storge', value);
-        setTokenValue(value);
-        //  console.log('redux storge', USER_TOKEN);
-      });
+      //  console.log('redux storge', USER_TOKEN);
       const FormData = require('form-data');
       let data = new FormData();
       data.append('image', {
@@ -84,9 +94,18 @@ const Home = ({navigation}) => {
           console.log('image uploaded successfully into database through api ');
           setUploadImage('');
           setIsLoaded(true);
+          navigation.navigate('Gallery');
         })
         .catch(error => {
           console.log('catch axios image api ', error.response.message);
+          Toast.show('Try again', {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
           setIsLoaded(true);
         });
     } else {
@@ -105,9 +124,15 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.drawerContainer}>
-        <DrawerButton onpress={() => navigation.openDrawer()} />
+        <DrawerButton
+          name={'three-bars'}
+          onpress={() => {
+            navigation.openDrawer();
+            console.log('drawer');
+          }}
+        />
       </View>
-      <View style={{flex: 1, padding: '2%'}}>
+      <View style={{flex: 1, padding: '2%', paddingTop: '1%'}}>
         <View style={styles.titleBanner}>
           <BannerImage
             imgSource={ImagesPath.LoginImagePath}
@@ -129,7 +154,7 @@ const Home = ({navigation}) => {
             }}
             title={'Chose Image'}
           />
-          <Text style={{fontSize: 32}}> | </Text>
+          <Text style={{fontSize: 32, color: 'black'}}> | </Text>
           <AddPictureButton
             isLoaded={true}
             onButtonCLick={() => {
@@ -159,7 +184,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   drawerContainer: {
-    flex: 0.05,
+    flex: 0.06,
   },
   titleBanner: {
     flex: 0.2,
@@ -169,7 +194,6 @@ const styles = StyleSheet.create({
   },
   choseImgButton: {
     flexDirection: 'row',
-
     flex: 0.1,
     justifyContent: 'center',
     alignItems: 'center',

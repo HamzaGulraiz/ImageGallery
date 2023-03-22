@@ -16,10 +16,10 @@ export default ImageContainer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: '2%',
+    padding: '3%',
   },
   imgContainer: {
-    padding: '2%',
+    padding: '3%',
     borderWidth: 1,
     borderRadius: 10,
   },

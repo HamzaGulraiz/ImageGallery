@@ -29,6 +29,7 @@ const InputField = ({titleInput, holderInput, value, onChangeText}) => {
                 style={styles.inputPassword}
                 onChangeText={onChangeText}
                 value={value}
+                placeholderTextColor="black"
                 placeholder={holderInput}
                 secureTextEntry={showPassword}
               />
@@ -54,6 +55,7 @@ const InputField = ({titleInput, holderInput, value, onChangeText}) => {
               }}>
               <TextInput
                 style={styles.input}
+                placeholderTextColor="black"
                 onChangeText={onChangeText}
                 value={value}
                 placeholder={holderInput}
@@ -77,14 +79,17 @@ const styles = StyleSheet.create({
     padding: '3%',
   },
   title: {
+    color: 'black',
     fontSize: 10,
     fontWeight: '400',
   },
   inputPassword: {
+    color: 'black',
     height: '90%',
     width: '90%',
   },
   input: {
+    color: 'black',
     height: '90%',
     width: '90%',
   },

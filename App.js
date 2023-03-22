@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {Platform, StyleSheet, Alert} from 'react-native';
+import React, {useEffect, useState, component} from 'react';
 import 'react-native-gesture-handler';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -15,6 +15,11 @@ import Gallery from './src/Screens/Gallery/Gallery';
 import Colors from './src/Utils/Colors/Colors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,11 +48,6 @@ function MyStack() {
   return routeName != '' ? (
     <Stack.Navigator initialRouteName={routeName}>
       <Stack.Screen
-        name="Register"
-        component={Register}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name="Login"
         component={Login}
         options={{headerShown: false}}
@@ -56,6 +56,12 @@ function MyStack() {
       <Stack.Screen
         name="DrawerNavigation"
         component={DrawerNavigation}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="Register"
+        component={Register}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -99,6 +105,29 @@ function DrawerNavigation() {
 }
 
 const App = () => {
+  const errorHandler = (e, isFatal) => {
+    if (isFatal) {
+      Alert.alert(
+        'Unexpected error occurred',
+        `
+        Error: ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
+
+        We will need to restart the app.
+        `,
+        [
+          {
+            text: 'Restart',
+            onPress: () => {
+              RNRestart.Restart();
+            },
+          },
+        ],
+      );
+    } else {
+      console.log('error handler skipping here', e); // So that we can see it in the ADB logs in case of Android if needed
+    }
+  };
+  setJSExceptionHandler(errorHandler);
   return (
     <NavigationContainer>
       <Provider store={store}>

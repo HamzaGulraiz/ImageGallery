@@ -21,6 +21,7 @@ import ErrorMsg from '../../Utils/Strings/ErrorString/ErrorMsg';
 
 import {useDispatch} from 'react-redux';
 import {userTokenRedux} from '../../redux/Action';
+import Config from '../../Config';
 
 const Login = ({navigation}) => {
   /////// redux dispatch
@@ -84,6 +85,10 @@ const Login = ({navigation}) => {
         const tokenValue = response.data.data.token;
         console.log('token sent by async login', tokenValue);
         AsyncStorage.setItem('userToken', tokenValue);
+        /////////Userinformation
+        const userInfo = JSON.stringify(response.data.data);
+        console.log('user Info sent from login', userInfo);
+        AsyncStorage.setItem('userInfo', userInfo);
 
         ////Redux storage
         dispatch(

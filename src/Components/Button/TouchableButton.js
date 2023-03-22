@@ -26,7 +26,7 @@ const TouchableButton = ({
         )}
       </TouchableOpacity>
       <View style={styles.row}>
-        <Text>{newOldUser}</Text>
+        <Text style={{color: 'black'}}>{newOldUser}</Text>
         <TouchableOpacity onPress={newOldUserClick}>
           <Text style={styles.link}>{miniTitle}</Text>
         </TouchableOpacity>

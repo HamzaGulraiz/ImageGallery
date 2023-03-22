@@ -89,13 +89,16 @@ const Register = ({navigation}) => {
       .request(config)
       .then(response => {
         //setErrorMessage(response.data.message);
-        //console.log('axios then', JSON.stringify(response.data.message));
+        console.log('axios then', JSON.stringify(response.data));
 
         ////Storing token in async/////
         const tokenValue = response.data.data.token;
         console.log('token sent by async register', tokenValue);
         AsyncStorage.setItem('userToken', tokenValue);
-
+        /////////Userinformation
+        const userInfo = JSON.stringify(response.data.data);
+        console.log('user Info sent from login', userInfo);
+        AsyncStorage.setItem('userInfo', userInfo);
         ////Redux storage
         dispatch(
           userTokenRedux({

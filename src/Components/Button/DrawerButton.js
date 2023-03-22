@@ -2,11 +2,11 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-const DrawerButton = ({onpress}) => {
+const DrawerButton = ({onpress, name}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onpress}>
-        <Icon name="three-bars" size={20} color={'black'} />
+        <Icon name={name} size={22} color={'black'} />
       </TouchableOpacity>
     </View>
   );

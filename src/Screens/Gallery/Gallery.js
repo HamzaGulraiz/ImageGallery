@@ -11,7 +11,10 @@ const Gallery = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.drawerContainer}>
-        <DrawerButton onpress={() => navigation.openDrawer()} />
+        <DrawerButton
+          name={'three-bars'}
+          onpress={() => navigation.openDrawer()}
+        />
       </View>
       <View style={{flex: 0.95, padding: '2%'}}>
         <View style={styles.titleBanner}>
