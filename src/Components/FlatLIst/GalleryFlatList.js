@@ -126,12 +126,9 @@ const GalleryFlatList = () => {
           setModalVisible(true);
         }}>
         <Image
+          resizeMode="contain"
           style={{height: '100%', width: '100%'}}
-          source={
-            item.imageURL
-              ? {uri: item.imageURL}
-              : require('./../../../assets/ImagePickerDefault/imagepickerdefault.jpg')
-          }
+          source={{uri: item.imageURL}}
         />
       </TouchableOpacity>
     );
@@ -274,9 +271,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     //alignItems: 'center',
   },
-  scrollView: {
-    flex: 1,
-  },
+
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -303,6 +298,9 @@ const styles = StyleSheet.create({
     // width: 150,
     // height: 150,
     // margin: 10,
+    backgroundColor: 'red',
+    padding: '4%',
+    height: '20%',
     width: '45%', // set the image width to 45% of the parent container
     aspectRatio: 1, // maintain the aspect ratio of the image
     margin: 10,

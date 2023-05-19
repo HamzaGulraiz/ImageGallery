@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {launchImageLibrary} from 'react-native-image-picker';
+//import ImagePicker from 'react-native-image-crop-picker';
 import DrawerButton from '../../Components/Button/DrawerButton';
 import AddPictureButton from '../../Components/Button/AddPictureButton';
 import BannerImage from '../../Components/BannerImage/BannerImage';
@@ -25,7 +26,13 @@ const Home = ({navigation}) => {
   const [imageData, setImageData] = useState();
   const [tokenValue, setTokenValue] = useState();
 
-  const choseImage = () => {
+  const choseImage = async () => {
+    // const res = ImagePicker.openPicker({
+    //   multiple: true,
+    // }).then(images => {
+    //   console.log(images);
+    // });
+
     const options = {
       noData: true,
     };
@@ -127,7 +134,7 @@ const Home = ({navigation}) => {
         <DrawerButton
           name={'three-bars'}
           onpress={() => {
-            navigation.openDrawer();
+             navigation.openDrawer();
             console.log('drawer');
           }}
         />
